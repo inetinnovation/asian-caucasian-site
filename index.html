@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Asian Caucasian — Indianapolis Pop</title>
+  <meta name="description" content="Asian Caucasian is an Indianapolis pop project. Born from the kind of late-night conversation that should have stayed at the bar." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── RESET & BASE ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:        #0a0a0c;
+      --bg2:       #111116;
+      --bg3:       #18181f;
+      --accent:    #ff6b35;
+      --accent2:   #ffab76;
+      --text:      #e8e8ee;
+      --muted:     #7a7a8e;
+      --border:    rgba(255,255,255,0.07);
+      --ff-display: 'Bebas Neue', sans-serif;
+      --ff-body:    'Inter', sans-serif;
+      --ff-mono:    'JetBrains Mono', monospace;
+    }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--ff-body);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ─── NOISE TEXTURE ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.6;
+    }
+
+    /* ─── SCROLL ANIMATIONS ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
+    .delay-4 { transition-delay: 0.4s; }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, rgba(10,10,12,0.95), transparent);
+      backdrop-filter: blur(0);
+      transition: background 0.3s, backdrop-filter 0.3s;
+    }
+    nav.scrolled {
+      background: rgba(10,10,12,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--ff-display);
+      font-size: 1.5rem;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--ff-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text);
+      transition: all 0.3s;
+    }
+    @media (max-width: 768px) {
+      .nav-toggle { display: flex; }
+      .nav-links {
+        position: fixed;
+        top: 0; right: 0;
+        width: 260px;
+        height: 100vh;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2.5rem;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+      }
+      .nav-links.open { transform: translateX(0); }
+      .nav-links a { font-size: 0.85rem; }
+    }
+
+    /* ─── HERO ─── */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 6rem 1.5rem 3rem;
+      overflow: hidden;
+    }
+    /* Grid overlay */
+    #hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,107,53,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,107,53,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+    /* Radial glow */
+    .hero-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -60%);
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(255,107,53,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-family: var(--ff-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-eyebrow::before, .hero-eyebrow::after {
+      content: '—';
+      margin: 0 0.6em;
+      opacity: 0.5;
+    }
+    h1.hero-title {
+      font-family: var(--ff-display);
+      font-size: clamp(4rem, 14vw, 11rem);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 0.3em;
+    }
+    h1.hero-title .line-1 { color: var(--text); }
+    h1.hero-title .line-2 {
+      color: transparent;
+      -webkit-text-stroke: 2px var(--accent);
+    }
+    .hero-sub {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 480px;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 2.5rem;
+    }
+    .hero-tags {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 3rem;
+    }
+    .tag {
+      font-family: var(--ff-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 0.3em 0.9em;
+      border-radius: 100px;
+    }
+    .tag.accent {
+      color: var(--accent);
+      border-color: rgba(255,107,53,0.35);
+      background: rgba(255,107,53,0.07);
+    }
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+    .btn {
+      font-family: var(--ff-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.85em 2em;
+      border-radius: 4px;
+      transition: all 0.2s;
+      cursor: pointer;
+      display: inline-block;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: 2px solid var(--accent);
+    }
+    .btn-primary:hover {
+      background: transparent;
+      color: var(--accent);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 2px solid var(--border);
+    }
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .hero-scroll {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--ff-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;
+      z-index: 1;
+      animation: bounce 2s ease-in-out infinite;
+    }
+    .hero-scroll::after {
+      content: '';
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--muted), transparent);
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* ─── MARQUEE ─── */
+    .marquee-wrap {
+      overflow: hidden;
+      background: var(--accent);
+      padding: 0.75rem 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .marquee-track {
+      display: flex;
+      white-space: nowrap;
+      animation: marquee 22s linear infinite;
+    }
+    .marquee-track span {
+      font-family: var(--ff-display);
+      font-size: 1.1rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--bg);
+      padding: 0 2rem;
+      flex-shrink: 0;
+    }
+    .marquee-track span.dot {
+      color: rgba(0,0,0,0.35);
+      padding: 0;
+    }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ─── SECTIONS COMMON ─── */
+    section { padding: 6rem 1.5rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-family: var(--ff-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: var(--ff-display);
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ─── ABOUT ─── */
+    #about { background: var(--bg2); }
+    .about-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    @media (max-width: 768px) {
+      .about-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+    }
+    .about-text p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 1.25rem;
+    }
+    .about-text p strong { color: var(--text); font-weight: 600; }
+    .about-text p em { color: var(--accent2); font-style: normal; }
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+    .stat-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .stat-card:hover {
+      border-color: rgba(255,107,53,0.3);
+      transform: translateY(-2px);
+    }
+    .stat-num {
+      font-family: var(--ff-display);
+      font-size: 2.8rem;
+      letter-spacing: 0.04em;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+    .stat-label {
+      font-family: var(--ff-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ─── MUSIC ─── */
+    #music { background: var(--bg); }
+    .music-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    @media (max-width: 768px) {
+      .music-grid { grid-template-columns: 1fr; }
+    }
+    .player-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .player-card:hover {
+      border-color: rgba(255,107,53,0.3);
+      box-shadow: 0 8px 40px rgba(255,107,53,0.08);
+    }
+    .player-card.featured {
+      grid-column: 1 / -1;
+    }
+    .player-header {
+      padding: 1.25rem 1.5rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--border);
+    }
+    .player-label {
+      font-family: var(--ff-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+    }
+    .player-title {
+      font-family: var(--ff-display);
+      font-size: 1.4rem;
+      letter-spacing: 0.05em;
+    }
+    .player-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-top: 6px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+    .player-body {
+      padding: 1.25rem 1.5rem;
+    }
+    .player-body iframe {
+      display: block;
+      width: 100%;
+      border: none;
+      border-radius: 6px;
+    }
+    .music-cta {
+      text-align: center;
+      margin-top: 2.5rem;
+    }
+    .music-cta p {
+      font-family: var(--ff-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+
+    /* ─── BAND MEMBERS ─── */
+    #members { background: var(--bg2); }
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .member-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .member-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .member-card:hover {
+      border-color: rgba(255,107,53,0.3);
+      transform: translateY(-4px);
+    }
+    .member-card:hover::before { opacity: 1; }
+    .member-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      margin: 0 auto 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      line-height: 1;
+    }
+    .member-name {
+      font-family: var(--ff-display);
+      font-size: 1.5rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.2rem;
+    }
+    .member-role {
+      font-family: var(--ff-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .member-bio {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ─── MARQUEE 2 ─── */
+    .marquee-wrap.dark {
+      background: var(--bg3);
+      border-color: var(--border);
+    }
+    .marquee-wrap.dark .marquee-track span {
+      color: var(--muted);
+    }
+    .marquee-wrap.dark .marquee-track span.dot {
+      color: var(--border);
+    }
+    .marquee-wrap.dark .marquee-track span.hi {
+      color: var(--accent);
+    }
+
+    /* ─── CONTACT ─── */
+    #contact { background: var(--bg); }
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    @media (max-width: 768px) {
+      .contact-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+    }
+    .contact-info p {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .contact-link-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-decoration: none;
+      color: var(--text);
+      padding: 1rem 1.25rem;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .contact-link-item:hover {
+      border-color: rgba(255,107,53,0.4);
+      transform: translateX(4px);
+      color: var(--accent);
+    }
+    .contact-link-icon {
+      font-size: 1.2rem;
+      width: 32px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .contact-link-text {
+      flex: 1;
+    }
+    .contact-link-label {
+      font-family: var(--ff-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.15rem;
+    }
+    .contact-link-value {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .contact-form {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+    }
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    .form-group label {
+      display: block;
+      font-family: var(--ff-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      font-family: var(--ff-body);
+      font-size: 0.9rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+      resize: vertical;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent);
+    }
+    .form-group textarea { min-height: 120px; }
+    .form-submit {
+      width: 100%;
+      font-family: var(--ff-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: var(--accent);
+      color: #fff;
+      border: 2px solid var(--accent);
+      padding: 0.85em 2em;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .form-submit:hover {
+      background: transparent;
+      color: var(--accent);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 3rem 1.5rem;
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 1.5rem;
+    }
+    .footer-logo {
+      font-family: var(--ff-display);
+      font-size: 2rem;
+      letter-spacing: 0.08em;
+    }
+    .footer-logo span { color: var(--accent); }
+    .footer-tagline {
+      font-family: var(--ff-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .footer-divider {
+      width: 60px;
+      height: 1px;
+      background: var(--border);
+    }
+    .footer-copy {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .footer-copy a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .footer-copy a:hover { text-decoration: underline; }
+
+    /* ─── SCROLL TO TOP ─── */
+    #back-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 44px;
+      height: 44px;
+      background: var(--accent);
+      border: none;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 50;
+    }
+    #back-top.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    #back-top:hover { background: var(--accent2); }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="main-nav">
+    <a href="#hero" class="nav-logo">Asian<span>Caucasian</span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#about" onclick="closeNav()">About</a></li>
+      <li><a href="#music" onclick="closeNav()">Music</a></li>
+      <li><a href="#members" onclick="closeNav()">Band</a></li>
+      <li><a href="#contact" onclick="closeNav()">Contact</a></li>
+      <li><a href="https://www.reverbnation.com/asiancaucasian" target="_blank" rel="noopener" onclick="closeNav()">ReverbNation</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-glow"></div>
+
+    <p class="hero-eyebrow reveal">Indianapolis, IN &middot; Est. We Don't Talk About It</p>
+
+    <h1 class="hero-title">
+      <span class="line-1 reveal delay-1">Asian</span><br>
+      <span class="line-2 reveal delay-2">Caucasian</span>
+    </h1>
+
+    <p class="hero-sub reveal delay-3">
+      Born from the kind of late-night conversation that should have stayed at the bar.
+      We made it a band instead.
+    </p>
+
+    <div class="hero-tags reveal delay-3">
+      <span class="tag accent">Pop</span>
+      <span class="tag">Indianapolis</span>
+      <span class="tag">#7 Local Charts</span>
+      <span class="tag">ReverbNation</span>
+    </div>
+
+    <div class="hero-cta reveal delay-4">
+      <a href="#music" class="btn btn-primary">Listen Now</a>
+      <a href="https://www.reverbnation.com/asiancaucasian" target="_blank" rel="noopener" class="btn btn-ghost">ReverbNation</a>
+    </div>
+
+    <div class="hero-scroll">Scroll</div>
+  </section>
+
+  <!-- MARQUEE 1 -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span>Asian Caucasian</span><span class="dot">✦</span>
+      <span>Indianapolis Pop</span><span class="dot">✦</span>
+      <span>#7 Local Charts</span><span class="dot">✦</span>
+      <span>New Music Out Now</span><span class="dot">✦</span>
+      <span>Asian Caucasian</span><span class="dot">✦</span>
+      <span>Indianapolis Pop</span><span class="dot">✦</span>
+      <span>#7 Local Charts</span><span class="dot">✦</span>
+      <span>New Music Out Now</span><span class="dot">✦</span>
+      <!-- duplicate for seamless loop -->
+      <span>Asian Caucasian</span><span class="dot">✦</span>
+      <span>Indianapolis Pop</span><span class="dot">✦</span>
+      <span>#7 Local Charts</span><span class="dot">✦</span>
+      <span>New Music Out Now</span><span class="dot">✦</span>
+      <span>Asian Caucasian</span><span class="dot">✦</span>
+      <span>Indianapolis Pop</span><span class="dot">✦</span>
+      <span>#7 Local Charts</span><span class="dot">✦</span>
+      <span>New Music Out Now</span><span class="dot">✦</span>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <div class="about-inner">
+        <div class="about-text reveal-left">
+          <p class="section-label">// About</p>
+          <h2 class="section-title">The Band<br>With That Name</h2>
+          <p>
+            Yes, we know what you're thinking. <strong>We thought it too.</strong> Then someone said
+            "what if that was actually a band?" and here we are — <em>a legitimate pop project</em>
+            out of Indianapolis, Indiana, with a name that makes every first interaction interesting.
+          </p>
+          <p>
+            Asian Caucasian makes <strong>pop music</strong> — the kind that sneaks into your head
+            during a commute and refuses to leave. We're self-aware enough to find the whole thing
+            funny and serious enough to make songs you'll actually want to play again.
+          </p>
+          <p>
+            Currently ranked <em>#7 on the local Indianapolis pop charts</em> on ReverbNation.
+            Gunning for #1. Probably.
+          </p>
+        </div>
+        <div class="about-stats reveal-right">
+          <div class="stat-card delay-1">
+            <div class="stat-num">#7</div>
+            <div class="stat-label">Indy Pop Charts</div>
+          </div>
+          <div class="stat-card delay-2">
+            <div class="stat-num">Pop</div>
+            <div class="stat-label">Genre</div>
+          </div>
+          <div class="stat-card delay-3">
+            <div class="stat-num">Indy</div>
+            <div class="stat-label">Home Base</div>
+          </div>
+          <div class="stat-card delay-4">
+            <div class="stat-num">∞</div>
+            <div class="stat-label">Awkward Questions About the Name</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MUSIC -->
+  <section id="music">
+    <div class="container">
+      <p class="section-label reveal">// Music</p>
+      <h2 class="section-title reveal delay-1">Listen Up</h2>
+
+      <div class="music-grid">
+        <!-- Featured: Full Catalog Player -->
+        <div class="player-card featured reveal delay-2">
+          <div class="player-header">
+            <div>
+              <p class="player-label">Full Catalog</p>
+              <p class="player-title">All Tracks</p>
+            </div>
+            <div class="player-dot"></div>
+          </div>
+          <div class="player-body">
+            <iframe
+              src="https://www.reverbnation.com/widget_code/html_widget/artist_1155315?widget_id=50&pwc[song_ids]=all&pwc[color_scheme]=dark"
+              width="100%"
+              height="265"
+              scrolling="no"
+              allow="autoplay"
+              title="Asian Caucasian — Full Catalog"
+            ></iframe>
+          </div>
+        </div>
+
+        <!-- Top Songs Player -->
+        <div class="player-card reveal delay-3">
+          <div class="player-header">
+            <div>
+              <p class="player-label">Singles</p>
+              <p class="player-title">Top Songs</p>
+            </div>
+            <div class="player-dot"></div>
+          </div>
+          <div class="player-body">
+            <iframe
+              src="https://www.reverbnation.com/widget_code/html_widget/artist_1155315?widget_id=55&pwc[color_scheme]=dark"
+              width="100%"
+              height="265"
+              scrolling="no"
+              allow="autoplay"
+              title="Asian Caucasian — Top Songs"
+            ></iframe>
+          </div>
+        </div>
+
+        <!-- Play Box -->
+        <div class="player-card reveal delay-4" style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding:2rem; gap:1rem; text-align:center;">
+          <div style="font-size:3rem; line-height:1;">🎵</div>
+          <p class="player-label" style="margin:0;">Stream &amp; Follow</p>
+          <p style="font-size:0.875rem; color:var(--muted); line-height:1.65;">
+            Find our full discography, follow for updates, and
+            show some love on ReverbNation.
+          </p>
+          <a
+            href="https://www.reverbnation.com/asiancaucasian/songs"
+            target="_blank"
+            rel="noopener"
+            class="btn btn-primary"
+            style="margin-top:0.5rem;"
+          >View All Songs</a>
+        </div>
+      </div>
+
+      <div class="music-cta reveal">
+        <p>Full discography available on ReverbNation</p>
+        <a href="https://www.reverbnation.com/asiancaucasian" target="_blank" rel="noopener" class="btn btn-ghost">
+          Visit Our ReverbNation Page ↗
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE 2 -->
+  <div class="marquee-wrap dark">
+    <div class="marquee-track" style="animation-direction:reverse;">
+      <span>Pop Music</span><span class="dot">·</span>
+      <span class="hi">Indianapolis</span><span class="dot">·</span>
+      <span>Late Night Vibes</span><span class="dot">·</span>
+      <span class="hi">Good Music</span><span class="dot">·</span>
+      <span>Ridiculous Name</span><span class="dot">·</span>
+      <span class="hi">Serious Tunes</span><span class="dot">·</span>
+      <span>Pop Music</span><span class="dot">·</span>
+      <span class="hi">Indianapolis</span><span class="dot">·</span>
+      <span>Late Night Vibes</span><span class="dot">·</span>
+      <span class="hi">Good Music</span><span class="dot">·</span>
+      <span>Ridiculous Name</span><span class="dot">·</span>
+      <span class="hi">Serious Tunes</span><span class="dot">·</span>
+      <!-- dupe -->
+      <span>Pop Music</span><span class="dot">·</span>
+      <span class="hi">Indianapolis</span><span class="dot">·</span>
+      <span>Late Night Vibes</span><span class="dot">·</span>
+      <span class="hi">Good Music</span><span class="dot">·</span>
+      <span>Ridiculous Name</span><span class="dot">·</span>
+      <span class="hi">Serious Tunes</span><span class="dot">·</span>
+    </div>
+  </div>
+
+  <!-- BAND MEMBERS -->
+  <section id="members">
+    <div class="container">
+      <p class="section-label reveal">// The People</p>
+      <h2 class="section-title reveal delay-1">Meet the Band</h2>
+      <div class="members-grid">
+        <div class="member-card reveal delay-1">
+          <div class="member-avatar">🎤</div>
+          <div class="member-name">The Voice</div>
+          <div class="member-role">Vocals / Frontperson</div>
+          <p class="member-bio">
+            Responsible for 90% of the band's charisma and 100% of the name's explanation to strangers at parties.
+          </p>
+        </div>
+        <div class="member-card reveal delay-2">
+          <div class="member-avatar">🎸</div>
+          <div class="member-name">The Riff</div>
+          <div class="member-role">Guitar / Keys</div>
+          <p class="member-bio">
+            The one who started the conversation that became the band. Denies it. Has the chord progressions to prove it happened.
+          </p>
+        </div>
+        <div class="member-card reveal delay-3">
+          <div class="member-avatar">🥁</div>
+          <div class="member-name">The Beat</div>
+          <div class="member-role">Drums / Percussion</div>
+          <p class="member-bio">
+            Showed up to what he thought was a regular jam session and never quite left. Keeping time since day one.
+          </p>
+        </div>
+        <div class="member-card reveal delay-4">
+          <div class="member-avatar">🎹</div>
+          <div class="member-name">The Low End</div>
+          <div class="member-role">Bass / Production</div>
+          <p class="member-bio">
+            The band's secret weapon. Builds everything that happens beneath the surface. Also handles the merch.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="container">
+      <div class="contact-inner">
+        <div class="contact-info">
+          <p class="section-label reveal">// Contact</p>
+          <h2 class="section-title reveal delay-1">Say Hello<br>(We Dare You)</h2>
+          <p class="reveal delay-2">
+            Booking inquiries, press, fan mail, questions about the name — we're
+            reachable. We actually do read these. Usually before the second coffee.
+          </p>
+          <div class="contact-links reveal delay-3">
+            <a href="mailto:asiancaucasian@email.com" class="contact-link-item">
+              <span class="contact-link-icon">✉</span>
+              <div class="contact-link-text">
+                <div class="contact-link-label">Email</div>
+                <div class="contact-link-value">asiancaucasian@email.com</div>
+              </div>
+            </a>
+            <a href="https://www.reverbnation.com/asiancaucasian" target="_blank" rel="noopener" class="contact-link-item">
+              <span class="contact-link-icon">♪</span>
+              <div class="contact-link-text">
+                <div class="contact-link-label">Music</div>
+                <div class="contact-link-value">reverbnation.com/asiancaucasian</div>
+              </div>
+            </a>
+            <span class="contact-link-item" style="cursor:default;">
+              <span class="contact-link-icon">📍</span>
+              <div class="contact-link-text">
+                <div class="contact-link-label">Location</div>
+                <div class="contact-link-value">Indianapolis, Indiana</div>
+              </div>
+            </span>
+          </div>
+        </div>
+
+        <div class="contact-form reveal delay-2">
+          <p class="section-label">// Send a Message</p>
+          <form onsubmit="handleForm(event)">
+            <div class="form-group">
+              <label for="name">Your Name</label>
+              <input type="text" id="name" name="name" placeholder="First Last" required />
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" placeholder="you@example.com" required />
+            </div>
+            <div class="form-group">
+              <label for="subject">Subject</label>
+              <input type="text" id="subject" name="subject" placeholder="Booking / Press / Other" />
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" placeholder="Tell us something good..." required></textarea>
+            </div>
+            <button type="submit" class="form-submit" id="form-btn">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">Asian<span>Caucasian</span></div>
+      <p class="footer-tagline">Indianapolis Pop · Est. We Don't Talk About It</p>
+      <div class="footer-divider"></div>
+      <p class="footer-copy">
+        &copy; 2024 Asian Caucasian. All rights reserved.<br>
+        Music on <a href="https://www.reverbnation.com/asiancaucasian" target="_blank" rel="noopener">ReverbNation</a>.
+        Yes, that's really the band name.
+      </p>
+    </div>
+  </footer>
+
+  <!-- BACK TO TOP -->
+  <button id="back-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+  <script>
+    // ─── NAV SCROLL ───
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+      document.getElementById('back-top').classList.toggle('show', window.scrollY > 400);
+    }, { passive: true });
+
+    // ─── MOBILE NAV ───
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks  = document.getElementById('nav-links');
+    navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+    function closeNav() { navLinks.classList.remove('open'); }
+
+    // ─── SCROLL REVEAL ───
+    const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
+
+    // ─── HERO IMMEDIATE REVEAL ───
+    window.addEventListener('load', () => {
+      document.querySelectorAll('#hero .reveal').forEach(el => {
+        setTimeout(() => el.classList.add('visible'), 100);
+      });
+    });
+
+    // ─── CONTACT FORM ───
+    function handleForm(e) {
+      e.preventDefault();
+      const btn = document.getElementById('form-btn');
+      btn.textContent = 'Message Sent ✓';
+      btn.style.background = 'transparent';
+      btn.style.color = 'var(--accent)';
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = 'Send Message';
+        btn.style.background = 'var(--accent)';
+        btn.style.color = '#fff';
+        btn.disabled = false;
+        e.target.reset();
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
