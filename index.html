@@ -424,80 +424,239 @@
 
     /* ─── MUSIC ─── */
     #music { background: var(--bg); }
-    .music-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      margin-top: 3rem;
+
+    /* Album tabs */
+    .album-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 2rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
     }
-    @media (max-width: 768px) {
-      .music-grid { grid-template-columns: 1fr; }
+    .album-tab {
+      font-family: var(--ff-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.6em 1.2em;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
     }
-    .player-card {
+    .album-tab:hover { border-color: var(--accent); color: var(--text); }
+    .album-tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* Player chrome */
+    .ac-player {
       background: var(--bg2);
       border: 1px solid var(--border);
       border-radius: 12px;
       overflow: hidden;
-      transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .player-card:hover {
-      border-color: rgba(255,107,53,0.3);
-      box-shadow: 0 8px 40px rgba(255,107,53,0.08);
-    }
-    .player-card.featured {
-      grid-column: 1 / -1;
-    }
-    .player-header {
-      padding: 0.75rem 1rem 0.5rem;
+
+    /* Now-playing bar */
+    .now-playing {
+      padding: 1.25rem 1.5rem;
       display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
+      gap: 1rem;
       border-bottom: 1px solid var(--border);
+      background: var(--bg3);
     }
-    .player-label {
+    .np-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+    .np-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      background: transparent;
+      color: var(--muted);
+    }
+    .np-btn:hover { color: var(--text); }
+    .np-btn.play-btn {
+      background: var(--accent);
+      color: #fff;
+      width: 48px;
+      height: 48px;
+    }
+    .np-btn.play-btn:hover { background: var(--accent2); }
+    .np-btn svg { width: 20px; height: 20px; fill: currentColor; }
+    .np-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .np-title {
+      font-family: var(--ff-display);
+      font-size: 1.2rem;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .np-album {
       font-family: var(--ff-mono);
       font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
       color: var(--accent);
-      margin-bottom: 0.25rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
     }
-    .player-title {
-      font-family: var(--ff-display);
-      font-size: 1.4rem;
-      letter-spacing: 0.05em;
+    .np-time {
+      font-family: var(--ff-mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      flex-shrink: 0;
     }
-    .player-dot {
-      width: 8px;
-      height: 8px;
+
+    /* Progress bar */
+    .progress-wrap {
+      padding: 0 1.5rem;
+      background: var(--bg3);
+      padding-bottom: 0.75rem;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+      cursor: pointer;
+      position: relative;
+    }
+    .progress-bar:hover { height: 6px; }
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 2px;
+      width: 0%;
+      position: relative;
+      transition: width 0.1s linear;
+    }
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      right: -5px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
       background: var(--accent);
-      margin-top: 6px;
-      animation: pulse 2s ease-in-out infinite;
+      opacity: 0;
+      transition: opacity 0.2s;
     }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.8); }
+    .progress-bar:hover .progress-fill::after { opacity: 1; }
+
+    /* Volume */
+    .np-volume {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-shrink: 0;
     }
-    .player-body {
-      padding: 0.5rem 0.75rem;
+    .np-volume svg { width: 16px; height: 16px; fill: var(--muted); cursor: pointer; }
+    .np-volume svg:hover { fill: var(--text); }
+    .volume-slider {
+      width: 60px;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 3px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+      outline: none;
     }
-    .player-body iframe {
-      display: block;
-      width: 100%;
-      border: none;
-      border-radius: 6px;
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
     }
-    .music-cta {
-      text-align: center;
-      margin-top: 2.5rem;
+
+    /* Track list */
+    .track-list {
+      list-style: none;
+      max-height: 400px;
+      overflow-y: auto;
     }
-    .music-cta p {
+    .track-list::-webkit-scrollbar { width: 4px; }
+    .track-list::-webkit-scrollbar-track { background: transparent; }
+    .track-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .track-item {
+      display: flex;
+      align-items: center;
+      padding: 0.7rem 1.5rem;
+      gap: 1rem;
+      cursor: pointer;
+      transition: background 0.15s;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .track-item:hover { background: rgba(255,255,255,0.03); }
+    .track-item.active { background: rgba(255,107,53,0.08); }
+    .track-num {
       font-family: var(--ff-mono);
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--muted);
+      width: 1.5rem;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .track-item.active .track-num { color: var(--accent); }
+    .track-item.active .track-num::after {
+      content: '▸';
+      margin-left: -0.6rem;
+    }
+    .track-name {
+      flex: 1;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .track-item.active .track-name { color: var(--accent); }
+    .track-duration {
+      font-family: var(--ff-mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+    .track-album-tag {
+      font-family: var(--ff-mono);
+      font-size: 0.55rem;
       letter-spacing: 0.08em;
-      margin-bottom: 1rem;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: rgba(255,255,255,0.05);
+      padding: 0.2em 0.5em;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 768px) {
+      .now-playing { padding: 1rem; gap: 0.75rem; }
+      .np-btn.play-btn { width: 42px; height: 42px; }
+      .np-title { font-size: 1rem; }
+      .np-volume { display: none; }
+      .progress-wrap { padding: 0 1rem 0.5rem; }
+      .track-item { padding: 0.65rem 1rem; }
+      .track-album-tag { display: none; }
+      .track-list { max-height: 350px; }
     }
 
     /* ─── BAND MEMBERS ─── */
@@ -784,10 +943,7 @@
       .about-text p { font-size: 0.95rem; line-height: 1.7; }
       .stat-num { font-size: 2.2rem; }
 
-      /* Music: shorter iframes on mobile */
-      .player-body iframe { height: 300px !important; }
-      .music-grid { gap: 1rem; margin-top: 2rem; }
-      .player-card.featured { margin-bottom: 0; }
+      /* Music: mobile player tweaks handled in player CSS above */
 
       /* Band members: bigger photos in single column */
       .member-avatar { width: 120px; height: 120px; }
@@ -826,7 +982,6 @@
       <li><a href="#about" onclick="closeNav()">About</a></li>
       <li><a href="#music" onclick="closeNav()">Music</a></li>
       <li><a href="#members" onclick="closeNav()">Band</a></li>
-      <li><a href="#contact" onclick="closeNav()">Contact</a></li>
     </ul>
   </nav>
 
@@ -850,12 +1005,10 @@
       <span class="tag accent">Pop</span>
       <span class="tag">Indianapolis</span>
       <span class="tag">#7 Local Charts</span>
-      <span class="tag">ReverbNation</span>
     </div>
 
     <div class="hero-cta reveal delay-4">
       <a href="#music" class="btn btn-primary">Listen Now</a>
-      <a href="https://www.reverbnation.com/asiancaucasian" target="_blank" rel="noopener" class="btn btn-ghost">ReverbNation</a>
     </div>
 
     <div class="hero-scroll">Scroll</div>
@@ -902,7 +1055,7 @@
             funny and serious enough to make songs you'll actually want to play again.
           </p>
           <p>
-            Currently ranked <em>#7 on the local Indianapolis pop charts</em> on ReverbNation.
+            Currently ranked <em>#7 on the local Indianapolis pop charts</em>.
             Gunning for #1. Probably.
           </p>
         </div>
@@ -934,72 +1087,45 @@
       <p class="section-label reveal">// Music</p>
       <h2 class="section-title reveal delay-1">Listen Up</h2>
 
-      <div class="music-grid">
-        <!-- Featured: Full Catalog Player -->
-        <div class="player-card featured reveal delay-2">
-          <div class="player-header">
-            <div>
-              <p class="player-label">Full Catalog</p>
-              <p class="player-title">All Tracks</p>
-            </div>
-            <div class="player-dot"></div>
-          </div>
-          <div class="player-body">
-            <iframe
-              src="https://www.reverbnation.com/widget_code/html_widget/artist_1155315?widget_id=50&pwc[song_ids]=all&pwc[color_scheme]=dark"
-              width="100%"
-              height="400"
-              scrolling="no"
-              allow="autoplay"
-              title="Asian Caucasian — Full Catalog"
-            ></iframe>
-          </div>
-        </div>
-
-        <!-- Top Songs Player -->
-        <div class="player-card reveal delay-3">
-          <div class="player-header">
-            <div>
-              <p class="player-label">Singles</p>
-              <p class="player-title">Top Songs</p>
-            </div>
-            <div class="player-dot"></div>
-          </div>
-          <div class="player-body">
-            <iframe
-              src="https://www.reverbnation.com/widget_code/html_widget/artist_1155315?widget_id=55&pwc[color_scheme]=dark"
-              width="100%"
-              height="400"
-              scrolling="no"
-              allow="autoplay"
-              title="Asian Caucasian — Top Songs"
-            ></iframe>
-          </div>
-        </div>
-
-        <!-- Play Box -->
-        <div class="player-card reveal delay-4" style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding:2rem; gap:1rem; text-align:center;">
-          <div style="font-size:3rem; line-height:1;">🎵</div>
-          <p class="player-label" style="margin:0;">Stream &amp; Follow</p>
-          <p style="font-size:0.875rem; color:var(--muted); line-height:1.65;">
-            Find our full discography, follow for updates, and
-            show some love on ReverbNation.
-          </p>
-          <a
-            href="https://www.reverbnation.com/asiancaucasian/songs"
-            target="_blank"
-            rel="noopener"
-            class="btn btn-primary"
-            style="margin-top:0.5rem;"
-          >View All Songs</a>
-        </div>
+      <div class="album-tabs reveal delay-2">
+        <button class="album-tab active" data-filter="all">All Tracks</button>
+        <button class="album-tab" data-filter="christmas">Dasher, Dancer, &amp; Prancer</button>
+        <button class="album-tab" data-filter="covers">The American Dream</button>
       </div>
 
-      <div class="music-cta reveal">
-        <p>Full discography available on ReverbNation</p>
-        <a href="https://www.reverbnation.com/asiancaucasian" target="_blank" rel="noopener" class="btn btn-ghost">
-          Visit Our ReverbNation Page ↗
-        </a>
+      <div class="ac-player reveal delay-3">
+        <!-- Now Playing -->
+        <div class="now-playing">
+          <div class="np-controls">
+            <button class="np-btn" id="prev-btn" aria-label="Previous">
+              <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+            </button>
+            <button class="np-btn play-btn" id="play-btn" aria-label="Play">
+              <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <svg class="icon-pause" viewBox="0 0 24 24" style="display:none"><path d="M6 19h4V5H6zm8-14v14h4V5z"/></svg>
+            </button>
+            <button class="np-btn" id="next-btn" aria-label="Next">
+              <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zm2 0h2V6h-2z" transform="scale(-1,1) translate(-24,0)"/></svg>
+            </button>
+          </div>
+          <div class="np-info">
+            <div class="np-title" id="np-title">Select a track</div>
+            <div class="np-album" id="np-album">Asian Caucasian</div>
+          </div>
+          <div class="np-time"><span id="time-current">0:00</span> / <span id="time-total">0:00</span></div>
+          <div class="np-volume">
+            <svg viewBox="0 0 24 24" id="vol-icon"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+            <input type="range" class="volume-slider" id="vol-slider" min="0" max="1" step="0.05" value="0.8" />
+          </div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-bar" id="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+        </div>
+
+        <!-- Track List -->
+        <ul class="track-list" id="track-list"></ul>
       </div>
     </div>
   </section>
@@ -1082,13 +1208,6 @@
                 <div class="contact-link-value">asiancaucasian@gmail.com</div>
               </div>
             </a>
-            <a href="https://www.reverbnation.com/asiancaucasian" target="_blank" rel="noopener" class="contact-link-item">
-              <span class="contact-link-icon">♪</span>
-              <div class="contact-link-text">
-                <div class="contact-link-label">Music</div>
-                <div class="contact-link-value">reverbnation.com/asiancaucasian</div>
-              </div>
-            </a>
             <span class="contact-link-item" style="cursor:default;">
               <span class="contact-link-icon">📍</span>
               <div class="contact-link-text">
@@ -1111,7 +1230,6 @@
       <div class="footer-divider"></div>
       <p class="footer-copy">
         &copy; 2024 Asian Caucasian. All rights reserved.<br>
-        Music on <a href="https://www.reverbnation.com/asiancaucasian" target="_blank" rel="noopener">ReverbNation</a>.
         Yes, that's really the band name.
       </p>
     </div>
@@ -1152,6 +1270,156 @@
         setTimeout(() => el.classList.add('visible'), 100);
       });
     });
+
+    // ─── AUDIO PLAYER ───
+    (function() {
+      const tracks = [
+        { title: "We Wish You a Merry Christmas", file: "music/we-wish-you-a-merry-christmas.mp3", album: "christmas" },
+        { title: "Run, Run Rudolph", file: "music/run-run-rudolph.mp3", album: "christmas" },
+        { title: "You're a Mean One, Mr. Grinch", file: "music/youre-a-mean-one-mr-grinch.mp3", album: "christmas" },
+        { title: "Santa Claus Is Coming to Town", file: "music/santa-claus-is-coming-to-town.mp3", album: "christmas" },
+        { title: "Let It Snow", file: "music/let-it-snow.mp3", album: "christmas" },
+        { title: "Sleigh Ride", file: "music/sleigh-ride.mp3", album: "christmas" },
+        { title: "Mele Kalikimaka", file: "music/mele-kalikimaka.mp3", album: "christmas" },
+        { title: "Rockin' Around the Christmas Tree", file: "music/rockin-around-the-christmas-tree.mp3", album: "christmas" },
+        { title: "Little Drummer Boy", file: "music/little-drummer-boy.mp3", album: "christmas" },
+        { title: "Holly Jolly Christmas", file: "music/holly-jolly-christmas.mp3", album: "christmas" },
+        { title: "Last Christmas", file: "music/last-christmas.mp3", album: "christmas" },
+        { title: "Jingle Bell Rock", file: "music/jingle-bell-rock.mp3", album: "christmas" },
+        { title: "Do You Hear What I Hear", file: "music/do-you-hear-what-i-hear.mp3", album: "christmas" },
+        { title: "White Christmas", file: "music/white-christmas.mp3", album: "christmas" },
+        { title: "All I Want For Christmas Is You", file: "music/all-i-want-for-christmas-is-you.mp3", album: "christmas" },
+        { title: "First Noel", file: "music/first-noel.mp3", album: "christmas" },
+        { title: "Joy to the World", file: "music/joy-to-the-world.mp3", album: "christmas" },
+        { title: "Winter Wonderland", file: "music/winter-wonderland.mp3", album: "christmas" },
+        { title: "Yeah, Yeah, Yeah", file: "music/yeah-yeah-yeah.mp3", album: "covers" },
+        { title: "Bye Bye Bye", file: "music/bye-bye-bye.mp3", album: "covers" },
+      ];
+
+      const albumNames = { christmas: "Dasher, Dancer, & Prancer", covers: "The American Dream" };
+      const audio = new Audio();
+      audio.volume = 0.8;
+      audio.preload = "none";
+      let current = -1;
+      let filtered = [...tracks];
+      let activeFilter = "all";
+
+      const listEl      = document.getElementById('track-list');
+      const playBtn     = document.getElementById('play-btn');
+      const prevBtn     = document.getElementById('prev-btn');
+      const nextBtn     = document.getElementById('next-btn');
+      const npTitle     = document.getElementById('np-title');
+      const npAlbum     = document.getElementById('np-album');
+      const timeCur     = document.getElementById('time-current');
+      const timeTotal   = document.getElementById('time-total');
+      const progressBar = document.getElementById('progress-bar');
+      const progressFill= document.getElementById('progress-fill');
+      const volSlider   = document.getElementById('vol-slider');
+      const iconPlay    = playBtn.querySelector('.icon-play');
+      const iconPause   = playBtn.querySelector('.icon-pause');
+
+      function fmt(s) {
+        if (isNaN(s)) return '0:00';
+        const m = Math.floor(s / 60);
+        const sec = Math.floor(s % 60);
+        return m + ':' + (sec < 10 ? '0' : '') + sec;
+      }
+
+      function renderList() {
+        listEl.innerHTML = '';
+        filtered.forEach((t, i) => {
+          const li = document.createElement('li');
+          li.className = 'track-item' + (tracks.indexOf(t) === current ? ' active' : '');
+          li.innerHTML =
+            '<span class="track-num">' + (i + 1) + '</span>' +
+            '<span class="track-name">' + t.title + '</span>' +
+            '<span class="track-album-tag">' + albumNames[t.album] + '</span>' +
+            '<span class="track-duration" data-src="' + t.file + '"></span>';
+          li.addEventListener('click', () => loadTrack(tracks.indexOf(t), true));
+          listEl.appendChild(li);
+        });
+        // Load durations lazily
+        listEl.querySelectorAll('.track-duration[data-src]').forEach(el => {
+          const a = new Audio();
+          a.preload = 'metadata';
+          a.src = el.dataset.src;
+          a.addEventListener('loadedmetadata', () => { el.textContent = fmt(a.duration); });
+        });
+      }
+
+      function loadTrack(idx, autoplay) {
+        current = idx;
+        const t = tracks[current];
+        audio.src = t.file;
+        npTitle.textContent = t.title;
+        npAlbum.textContent = albumNames[t.album];
+        updateActive();
+        if (autoplay) audio.play();
+      }
+
+      function updateActive() {
+        listEl.querySelectorAll('.track-item').forEach((li, i) => {
+          li.classList.toggle('active', tracks.indexOf(filtered[i]) === current);
+        });
+        updatePlayIcon();
+      }
+
+      function updatePlayIcon() {
+        const playing = !audio.paused;
+        iconPlay.style.display = playing ? 'none' : '';
+        iconPause.style.display = playing ? '' : 'none';
+      }
+
+      playBtn.addEventListener('click', () => {
+        if (current < 0) { loadTrack(tracks.indexOf(filtered[0]), true); return; }
+        audio.paused ? audio.play() : audio.pause();
+      });
+
+      prevBtn.addEventListener('click', () => {
+        if (current < 0) return;
+        const fi = filtered.indexOf(tracks[current]);
+        const prev = fi > 0 ? tracks.indexOf(filtered[fi - 1]) : tracks.indexOf(filtered[filtered.length - 1]);
+        loadTrack(prev, !audio.paused);
+      });
+
+      nextBtn.addEventListener('click', () => {
+        if (current < 0) return;
+        const fi = filtered.indexOf(tracks[current]);
+        const next = fi < filtered.length - 1 ? tracks.indexOf(filtered[fi + 1]) : tracks.indexOf(filtered[0]);
+        loadTrack(next, !audio.paused);
+      });
+
+      audio.addEventListener('timeupdate', () => {
+        timeCur.textContent = fmt(audio.currentTime);
+        if (audio.duration) {
+          progressFill.style.width = (audio.currentTime / audio.duration * 100) + '%';
+        }
+      });
+      audio.addEventListener('loadedmetadata', () => { timeTotal.textContent = fmt(audio.duration); });
+      audio.addEventListener('ended', () => { nextBtn.click(); });
+      audio.addEventListener('play', updatePlayIcon);
+      audio.addEventListener('pause', updatePlayIcon);
+
+      progressBar.addEventListener('click', (e) => {
+        if (!audio.duration) return;
+        audio.currentTime = (e.offsetX / progressBar.offsetWidth) * audio.duration;
+      });
+
+      volSlider.addEventListener('input', () => { audio.volume = volSlider.value; });
+
+      // Album filter tabs
+      document.querySelectorAll('.album-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.album-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          activeFilter = tab.dataset.filter;
+          filtered = activeFilter === 'all' ? [...tracks] : tracks.filter(t => t.album === activeFilter);
+          renderList();
+        });
+      });
+
+      renderList();
+    })();
 
   </script>
 </body>
