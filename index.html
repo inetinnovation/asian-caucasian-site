@@ -101,7 +101,7 @@
     }
     .nav-logo {
       font-family: var(--ff-display);
-      font-size: 1.5rem;
+      font-size: 1.75rem;
       letter-spacing: 0.08em;
       color: var(--text);
       text-decoration: none;
@@ -114,7 +114,7 @@
     }
     .nav-links a {
       font-family: var(--ff-mono);
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--muted);
@@ -180,10 +180,10 @@
       pointer-events: none;
       z-index: 1;
     }
-    /* Background images */
+    /* Background */
     .hero-bg {
       position: absolute;
-      inset: 0;
+      inset: -20px;
       z-index: 0;
     }
     .hero-bg-img {
@@ -192,22 +192,26 @@
       width: 100%; height: 100%;
       object-fit: cover;
       object-position: center 30%;
+      filter: grayscale(60%) brightness(0.18) blur(8px);
     }
-    .hero-bg-img.bg-back {
-      filter: grayscale(30%) brightness(0.35);
-    }
-    .hero-bg-img.bg-front {
-      filter: grayscale(20%) brightness(0.3);
-      opacity: 0.6;
-      mix-blend-mode: lighten;
-    }
+    .hero-bg-img.bg-front { display: none; }
     .hero-bg::after {
       content: '';
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(to top, var(--bg) 0%, rgba(10,10,12,0.6) 40%, rgba(10,10,12,0.3) 100%),
-        linear-gradient(to right, rgba(10,10,12,0.7) 0%, transparent 50%);
+        linear-gradient(to top, var(--bg) 0%, rgba(10,10,12,0.5) 50%, rgba(10,10,12,0.7) 100%),
+        linear-gradient(to right, rgba(10,10,12,0.5) 0%, transparent 60%);
+    }
+    /* Accent glow */
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      top: 30%; left: 20%;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(255,107,53,0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 1;
     }
 
     .hero-content {
@@ -680,20 +684,27 @@
       border-bottom: 1px solid rgba(255,255,255,0.03);
     }
     .track-item:hover { background: rgba(255,255,255,0.03); }
+    .track-item:hover .track-name { color: var(--text); }
     .track-item.active { background: rgba(255,107,53,0.08); }
     .track-num {
       font-family: var(--ff-mono);
       font-size: 0.7rem;
       color: var(--muted);
       width: 1.5rem;
-      text-align: right;
+      text-align: center;
       flex-shrink: 0;
+      position: relative;
     }
+    .track-num .num-text { display: inline; }
+    .track-num .num-play {
+      display: none;
+      width: 16px; height: 16px;
+      fill: var(--text);
+    }
+    .track-item:hover .track-num .num-text { display: none; }
+    .track-item:hover .track-num .num-play { display: inline-block; }
     .track-item.active .track-num { color: var(--accent); }
-    .track-item.active .track-num::after {
-      content: '▸';
-      margin-left: -0.6rem;
-    }
+    .track-item.active .track-num .num-play { fill: var(--accent); }
     .track-name {
       flex: 1;
       font-size: 0.9rem;
@@ -1422,7 +1433,7 @@
           const li = document.createElement('li');
           li.className = 'track-item' + (tracks.indexOf(t) === current ? ' active' : '');
           li.innerHTML =
-            '<span class="track-num">' + (i + 1) + '</span>' +
+            '<span class="track-num"><span class="num-text">' + (i + 1) + '</span><svg class="num-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>' +
             '<span class="track-name">' + t.title + '</span>' +
             '<span class="track-album-tag">' + albumNames[t.album] + '</span>' +
             '<span class="track-duration" data-src="' + t.file + '"></span>';
