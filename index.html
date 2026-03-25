@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Asian Caucasian — Indianapolis Pop</title>
-  <meta name="description" content="Asian Caucasian is an Indianapolis pop project. Born from the kind of late-night conversation that should have stayed at the bar." />
+  <meta name="description" content="Asian Caucasian is an Indianapolis pop project. Three guys, one questionable band name, and a whole lot of pop music." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -30,7 +30,7 @@
       background: var(--bg);
       color: var(--text);
       font-family: var(--ff-body);
-      overflow-x: hidden;
+      overflow-x: clip;
       line-height: 1.6;
     }
 
@@ -158,109 +158,119 @@
       .nav-links a { font-size: 0.85rem; }
     }
 
-    /* ─── HERO ─── */
+    /* ─── HERO (Cinematic) ─── */
     #hero {
       position: relative;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 6rem 1.5rem 3rem;
+      justify-content: flex-end;
+      padding: 4rem 3rem;
       overflow: hidden;
     }
-    /* Grid overlay */
-    #hero::after {
+    /* Scanline overlay */
+    #hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background-image:
-        linear-gradient(rgba(255,107,53,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,107,53,0.04) 1px, transparent 1px);
-      background-size: 60px 60px;
+      background: repeating-linear-gradient(
+        to bottom, transparent, transparent 3px,
+        rgba(0,0,0,0.03) 3px, rgba(0,0,0,0.03) 4px
+      );
       pointer-events: none;
+      z-index: 1;
     }
-    /* Radial glow */
-    .hero-glow {
+    /* Background images */
+    .hero-bg {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -60%);
-      width: 700px;
-      height: 700px;
-      background: radial-gradient(circle, rgba(255,107,53,0.12) 0%, transparent 70%);
-      pointer-events: none;
+      inset: 0;
+      z-index: 0;
+    }
+    .hero-bg-img {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+    }
+    .hero-bg-img.bg-back {
+      filter: grayscale(30%) brightness(0.35);
+    }
+    .hero-bg-img.bg-front {
+      filter: grayscale(20%) brightness(0.3);
+      opacity: 0.6;
+      mix-blend-mode: lighten;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to top, var(--bg) 0%, rgba(10,10,12,0.6) 40%, rgba(10,10,12,0.3) 100%),
+        linear-gradient(to right, rgba(10,10,12,0.7) 0%, transparent 50%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
     }
     .hero-eyebrow {
       font-family: var(--ff-mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.25em;
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
       text-transform: uppercase;
       color: var(--accent);
-      margin-bottom: 1.25rem;
-      position: relative;
-      z-index: 1;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
-    .hero-eyebrow::before, .hero-eyebrow::after {
-      content: '—';
-      margin: 0 0.6em;
-      opacity: 0.5;
+    .hero-eyebrow::before {
+      content: '';
+      width: 40px; height: 2px;
+      background: var(--accent);
     }
     h1.hero-title {
       font-family: var(--ff-display);
-      font-size: clamp(4rem, 14vw, 11rem);
-      line-height: 0.9;
-      letter-spacing: 0.02em;
+      font-size: clamp(5rem, 12vw, 10rem);
+      line-height: 0.85;
+      letter-spacing: 0.03em;
       text-transform: uppercase;
-      position: relative;
-      z-index: 1;
-      margin-bottom: 0.3em;
+      margin-bottom: 1rem;
     }
-    h1.hero-title .line-1 { color: var(--text); }
+    h1.hero-title .line-1 {
+      color: var(--text);
+      display: block;
+    }
     h1.hero-title .line-2 {
-      color: transparent;
-      -webkit-text-stroke: 2px var(--accent);
+      display: block;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-rule {
+      width: 80px; height: 3px;
+      background: var(--accent);
+      margin-bottom: 1.25rem;
+      border: none;
     }
     .hero-sub {
-      font-size: 1rem;
-      color: var(--muted);
-      max-width: 480px;
-      position: relative;
-      z-index: 1;
+      font-size: 1.15rem;
+      color: rgba(232,232,238,0.8);
+      font-weight: 300;
+      max-width: 500px;
       margin-bottom: 2.5rem;
-    }
-    .hero-tags {
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      justify-content: center;
-      position: relative;
-      z-index: 1;
-      margin-bottom: 3rem;
-    }
-    .tag {
-      font-family: var(--ff-mono);
-      font-size: 0.68rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      padding: 0.3em 0.9em;
-      border-radius: 100px;
-    }
-    .tag.accent {
-      color: var(--accent);
-      border-color: rgba(255,107,53,0.35);
-      background: rgba(255,107,53,0.07);
+      line-height: 1.8;
     }
     .hero-cta {
       display: flex;
       gap: 1rem;
+      align-items: center;
       flex-wrap: wrap;
-      justify-content: center;
+      margin-bottom: 3rem;
       position: relative;
-      z-index: 1;
+      z-index: 2;
     }
     .btn {
       font-family: var(--ff-mono);
@@ -268,12 +278,15 @@
       letter-spacing: 0.1em;
       text-transform: uppercase;
       text-decoration: none;
-      padding: 0.85em 2em;
-      border-radius: 4px;
+      padding: 1em 2.2em;
+      border-radius: 2px;
       transition: all 0.2s;
       cursor: pointer;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6em;
     }
+    .btn svg { width: 14px; height: 14px; fill: currentColor; }
     .btn-primary {
       background: var(--accent);
       color: #fff;
@@ -286,12 +299,71 @@
     .btn-ghost {
       background: transparent;
       color: var(--text);
-      border: 2px solid var(--border);
+      border: 2px solid rgba(255,255,255,0.15);
     }
     .btn-ghost:hover {
       border-color: var(--accent);
       color: var(--accent);
     }
+
+    /* Hero bottom album bar */
+    .hero-bottom {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      margin-top: 1rem;
+    }
+    .album-mini {
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .album-mini img {
+      width: 44px; height: 44px;
+      border-radius: 6px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+    }
+    .album-mini-text {
+      font-size: 0.8rem;
+      color: var(--text);
+    }
+    .album-mini-label {
+      font-family: var(--ff-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.15rem;
+    }
+
+    /* Right side floating info */
+    .hero-side {
+      position: absolute;
+      right: 3rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .side-line {
+      width: 1px; height: 60px;
+      background: linear-gradient(to bottom, transparent, var(--accent), transparent);
+    }
+    .side-text {
+      font-family: var(--ff-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      writing-mode: vertical-rl;
+    }
+
     .hero-scroll {
       position: absolute;
       bottom: 2rem;
@@ -306,7 +378,7 @@
       letter-spacing: 0.15em;
       color: var(--muted);
       text-transform: uppercase;
-      z-index: 1;
+      z-index: 2;
       animation: bounce 2s ease-in-out infinite;
     }
     .hero-scroll::after {
@@ -930,12 +1002,12 @@
       /* Tighter section padding */
       section { padding: 3.5rem 1rem; }
 
-      /* Hero: less top padding, smaller subtitle */
-      #hero { padding: 4rem 1rem 2.5rem; min-height: 100svh; }
-      .hero-eyebrow { font-size: 0.6rem; margin-bottom: 1rem; }
-      .hero-sub { font-size: 0.9rem; margin-bottom: 1.5rem; }
-      .hero-tags { gap: 0.5rem; margin-bottom: 2rem; }
-      .tag { font-size: 0.6rem; padding: 0.4em 0.8em; }
+      /* Hero: cinematic mobile */
+      #hero { padding: 6rem 1.5rem 2rem; min-height: 100svh; }
+      .hero-eyebrow { font-size: 0.6rem; }
+      .hero-sub { font-size: 1rem; }
+      .hero-side { display: none; }
+      .hero-bottom { flex-direction: column; gap: 1rem; align-items: flex-start; }
       .hero-cta { gap: 0.75rem; }
       .btn { padding: 0.75em 1.5em; font-size: 0.7rem; }
 
@@ -963,10 +1035,7 @@
 
     /* Small phones */
     @media (max-width: 380px) {
-      h1.hero-title .line-2 { -webkit-text-stroke: 1.5px var(--accent); }
       .section-title { font-size: clamp(2rem, 8vw, 3rem); }
-      .hero-tags { gap: 0.4rem; }
-      .tag { font-size: 0.55rem; }
     }
   </style>
 </head>
@@ -987,31 +1056,53 @@
 
   <!-- HERO -->
   <section id="hero">
-    <div class="hero-glow"></div>
-
-    <p class="hero-eyebrow reveal">Indianapolis, IN &middot; Est. We Don't Talk About It</p>
-
-    <h1 class="hero-title">
-      <span class="line-1 reveal delay-1">Asian</span><br>
-      <span class="line-2 reveal delay-2">Caucasian</span>
-    </h1>
-
-    <p class="hero-sub reveal delay-3">
-      Born from the kind of late-night conversation that should have stayed at the bar.
-      We made it a band instead.
-    </p>
-
-    <div class="hero-tags reveal delay-3">
-      <span class="tag accent">Pop</span>
-      <span class="tag">Indianapolis</span>
-      <span class="tag">#7 Local Charts</span>
+    <div class="hero-bg">
+      <img class="hero-bg-img bg-back" src="images/album-cover-1.jpg" alt="" />
+      <img class="hero-bg-img bg-front" src="images/album-cover-2.jpg" alt="" />
     </div>
 
-    <div class="hero-cta reveal delay-4">
-      <a href="#music" class="btn btn-primary">Listen Now</a>
+    <div class="hero-content">
+      <p class="hero-eyebrow reveal">Indianapolis Pop</p>
+      <h1 class="hero-title">
+        <span class="line-1 reveal delay-1">Asian</span>
+        <span class="line-2 reveal delay-2">Caucasian</span>
+      </h1>
+      <hr class="hero-rule reveal delay-2" />
+      <p class="hero-sub reveal delay-3">
+        Three guys, one questionable band name, and a whole lot of pop music
+        nobody asked for — but everyone keeps listening to.
+      </p>
+      <div class="hero-cta reveal delay-4">
+        <a href="#music" class="btn btn-primary">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          Play Music
+        </a>
+        <a href="#members" class="btn btn-ghost">About the Band</a>
+      </div>
     </div>
 
-    <div class="hero-scroll">Scroll</div>
+    <div class="hero-bottom reveal delay-4">
+      <div class="album-mini">
+        <img src="images/album-cover-1.jpg" alt="Dasher, Dancer & Prancer" />
+        <div>
+          <div class="album-mini-label">Christmas Album</div>
+          <div class="album-mini-text">Dasher, Dancer, &amp; Prancer</div>
+        </div>
+      </div>
+      <div class="album-mini">
+        <img src="images/album-cover-2.jpg" alt="The American Dream" />
+        <div>
+          <div class="album-mini-label">Also Streaming</div>
+          <div class="album-mini-text">The American Dream with a Side of Rice</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-side">
+      <div class="side-line"></div>
+      <span class="side-text">#7 Indy Pop Charts</span>
+      <div class="side-line"></div>
+    </div>
   </section>
 
   <!-- MARQUEE 1 -->
