@@ -57,10 +57,21 @@ add_action( 'wp_head', function () {
 
 /**
  * /llms.txt route — citable summary for AI engines.
+ * Matched super-early in the request lifecycle to avoid WordPress's
+ * canonical-trailing-slash redirect (which would turn /llms.txt into /llms.txt/).
  */
-add_action( 'init', function () {
-	add_rewrite_rule( '^llms\.txt$', 'index.php?ac_llms=1', 'top' );
+add_action( 'parse_request', function ( WP $wp ) {
+	$path = isset( $_SERVER['REQUEST_URI'] ) ? wp_parse_url( wp_unslash( $_SERVER['REQUEST_URI'] ), PHP_URL_PATH ) : '';
+	if ( $path === '/llms.txt' || $path === '/llms.txt/' ) {
+		$wp->query_vars['ac_llms'] = 1;
+	}
 } );
+
+add_filter( 'redirect_canonical', function ( $redirect_url, $requested_url ) {
+	$path = wp_parse_url( $requested_url, PHP_URL_PATH );
+	if ( $path === '/llms.txt' || $path === '/llms.txt/' ) return false;
+	return $redirect_url;
+}, 10, 2 );
 
 add_filter( 'query_vars', function ( array $vars ) {
 	$vars[] = 'ac_llms';
