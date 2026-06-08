@@ -86,27 +86,31 @@ add_action( 'template_redirect', function () {
 	$location = (string) get_theme_mod( 'ac_contact_location', 'Indianapolis, Indiana' );
 	$email    = (string) get_theme_mod( 'ac_contact_email', 'asiancaucasian@gmail.com' );
 
+	$decode = static fn( string $s ): string => html_entity_decode( $s, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+
 	$albums = get_terms( [ 'taxonomy' => 'ac_album', 'hide_empty' => false ] );
 	$album_lines = '';
 	if ( ! is_wp_error( $albums ) ) {
-		foreach ( $albums as $a ) $album_lines .= "- {$a->name}\n";
+		foreach ( $albums as $a ) $album_lines .= '- ' . $decode( $a->name ) . "\n";
 	}
 
 	$members_q = new WP_Query( [ 'post_type' => 'ac_member', 'posts_per_page' => -1, 'orderby' => 'menu_order', 'order' => 'ASC' ] );
 	$member_lines = '';
 	foreach ( $members_q->posts as $m ) {
 		$role = (string) get_post_meta( $m->ID, '_ac_member_role', true );
-		$member_lines .= '- ' . get_the_title( $m ) . ( $role ? " ({$role})" : '' ) . "\n";
+		$member_lines .= '- ' . $decode( get_the_title( $m ) ) . ( $role ? " ({$role})" : '' ) . "\n";
 	}
 
+	$about_default = (string) get_theme_mod( 'ac_about_body' );
+	$about_text    = trim( $decode( wp_strip_all_tags( $about_default ) ) );
+
 	header( 'Content-Type: text/plain; charset=utf-8' );
-	echo "# {$name}\n\n";
-	echo "> {$tagline}. Based in {$location}.\n\n";
-	echo "## About\n\n";
-	echo wp_strip_all_tags( (string) get_theme_mod( 'ac_about_body', '' ) ) . "\n\n";
+	echo "# " . $decode( $name ) . "\n\n";
+	echo '> ' . $decode( $tagline ) . '. Based in ' . $decode( $location ) . ".\n\n";
+	if ( $about_text !== '' ) echo "## About\n\n{$about_text}\n\n";
 	echo "## Albums\n\n{$album_lines}\n";
 	echo "## Members\n\n{$member_lines}\n";
-	echo "## Contact\n\n- Email: {$email}\n- Location: {$location}\n- Website: " . home_url( '/' ) . "\n";
+	echo "## Contact\n\n- Email: {$email}\n- Location: " . $decode( $location ) . "\n- Website: " . home_url( '/' ) . "\n";
 	exit;
 } );
 
