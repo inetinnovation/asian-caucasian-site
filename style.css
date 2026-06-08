@@ -1,0 +1,16 @@
+/*
+Theme Name: Asian Caucasian
+Theme URI: https://asiancaucasianmusic.com
+Author: Asian Caucasian
+Author URI: https://asiancaucasianmusic.com
+Description: Custom WordPress theme for Asian Caucasian — Indianapolis pop trio. Single-page layout with hero, about, music player, members, contact. Pulls tracks and members from custom post types; copy editable via Customizer + Pages.
+Version: 1.0.0
+Requires at least: 6.0
+Tested up to: 7.0
+Requires PHP: 8.0
+License: GPL v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: asian-caucasian
+*/
+
+/* Real CSS lives in assets/css/main.css and is enqueued from functions.php. */

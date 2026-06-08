@@ -1,0 +1,22 @@
+# Editor / OS
+.DS_Store
+*.swp
+*.swo
+*~
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# IJFW / Claude session data (local only)
+.ijfw/dump/
+.ijfw/sessions/
+
+# WordPress runtime (this repo is a THEME — WP core lives outside the repo on the server)
+wp-config.php
+wp-config-sample.php
+wp-content/
+wp-admin/
+wp-includes/
+*.log
